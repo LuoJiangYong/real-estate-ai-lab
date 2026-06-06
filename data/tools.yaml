@@ -1,0 +1,32 @@
+tools:
+  - id: customer-research
+    number: "01"
+    title: AI 客研
+    subtitle: Customer Research
+    status: 内测规划中
+    description: 理解人群、需求、生活方式与潜在机会，辅助形成清晰的客户洞察。
+  - id: product-strategy
+    number: "02"
+    title: AI 产策
+    subtitle: Product Strategy
+    status: 预留接入
+    description: 整合市场、客群、产品定位与空间策略，支持地产项目前期判断。
+  - id: storyline
+    number: "03"
+    title: AI 故事线
+    subtitle: Storyline
+    status: 预留接入
+    description: 生成项目叙事、价值表达与传播内容框架。
+  - id: marketing
+    number: "04"
+    title: AI 营销
+    subtitle: Marketing
+    status: 预留接入
+    description: 辅助内容生产、渠道表达、转化链路与增长策略。
+  - id: industry-agents
+    number: "05"
+    title: 行业智能体
+    subtitle: Industry Deep Agents
+    status: 未来上线
+    description: 面向细分行业与垂直场景持续扩展深耕智能体。
+

@@ -1,0 +1,80 @@
+{{ define "main" }}
+{{ $site := .Site.Data.site }}
+{{ $tools := .Site.Data.tools.tools }}
+<section class="hero section-full">
+  <div class="hero-copy reveal">
+    <p class="eyebrow">{{ $site.brand.project }}</p>
+    <h1>{{ $site.brand.name }}</h1>
+    <span class="title-rule"></span>
+    <p class="hero-tagline">{{ $site.brand.tagline }}</p>
+    <button class="button button-dark" type="button" data-open-reservation>内测预约</button>
+  </div>
+  <div class="ribbon-field" aria-hidden="true">
+    <span class="ribbon ribbon-one"></span>
+    <span class="ribbon ribbon-two"></span>
+    <span class="ribbon ribbon-three"></span>
+  </div>
+  <div class="scroll-cue" aria-hidden="true">
+    <span></span>
+    <small>SCROLL</small>
+  </div>
+</section>
+
+<section class="intro-section section-pad">
+  <div class="section-grid">
+    <div class="reveal">
+      <p class="eyebrow">About COSKY.AI</p>
+      <h2>AI for<br>Better Living</h2>
+      <span class="title-rule"></span>
+      <p>COSKY.AI 以「AI For Better Living」为核心理念，正在打造首个地产全场景 AI LAB OS，覆盖 AI 客研、产策、故事线、营销等关键环节。</p>
+      <p>通过多 Agent 协作架构、可视化画布系统与客群平行世界，让复杂决策过程变得更清晰、更高效、更具洞察力。</p>
+      <button class="button button-dark" type="button" data-open-reservation>内测预约</button>
+    </div>
+    <div class="motion-panel" aria-hidden="true">
+      <span class="ribbon ribbon-mid"></span>
+      <span class="ribbon ribbon-low"></span>
+    </div>
+  </div>
+</section>
+
+<section class="capability-strip section-pad" aria-labelledby="capabilities-title">
+  <div class="section-heading">
+    <p class="eyebrow">What We Build</p>
+    <h2 id="capabilities-title">首个地产全场景 AI LAB OS</h2>
+  </div>
+  <div class="tool-grid">
+    {{ range $tools }}
+      <article class="tool-item reveal">
+        <span>{{ .number }}</span>
+        <h3>{{ .title }}</h3>
+        <p>{{ .description }}</p>
+        <i aria-hidden="true"></i>
+      </article>
+    {{ end }}
+  </div>
+</section>
+
+<section class="media-section section-pad">
+  <div>
+    <p class="eyebrow">Product Preview</p>
+    <h2>Website, video, and AI tools will share one visual system.</h2>
+    <p>一期先建立项目介绍、预约入口与产品预告。后续 AI 工具上线时，继续沿用同一套页面组件、内容数据和品牌资产。</p>
+  </div>
+  <div class="video-shell">
+    <video controls muted playsinline poster="">
+      <source src="{{ "video/intro.mp4" | relURL }}" type="video/mp4">
+    </video>
+    <div class="video-placeholder">
+      <span>COSKY.AI</span>
+      <small>Demo video placeholder</small>
+    </div>
+  </div>
+</section>
+
+<section class="final-cta section-pad">
+  <h2>COSKY.AI</h2>
+  <p>AI for Better Living</p>
+  <button class="button button-blue" type="button" data-open-reservation>预约内测体验</button>
+</section>
+{{ end }}
+

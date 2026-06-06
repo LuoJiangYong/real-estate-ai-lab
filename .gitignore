@@ -1,0 +1,8 @@
+public/
+resources/
+.hugo_build.lock
+hugo_stats.json
+_figma_review/
+_tools/
+.DS_Store
+Thumbs.db

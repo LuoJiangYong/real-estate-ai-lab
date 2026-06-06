@@ -1,0 +1,12 @@
+{{ define "main" }}
+<section class="reservation-page section-pad">
+  <div>
+    <p class="eyebrow">Reservation</p>
+    <h1>预约 real estate Ai lab 内测体验</h1>
+    <p>留下邮箱和简短业务场景。当前为静态站预约入口，后续可切换为表单服务或自有 API。</p>
+  </div>
+  <div class="reservation-card">
+    {{ partial "reservation-form.html" . }}
+  </div>
+</section>
+{{ end }}

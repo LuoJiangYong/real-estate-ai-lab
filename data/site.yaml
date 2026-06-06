@@ -1,0 +1,24 @@
+brand:
+  name: COSKY.AI
+  project: real estate Ai lab
+  tagline: AI for Better Living
+  description: 首个地产全场景 AI LAB OS，覆盖 AI 客研、产策、故事线、营销等关键环节。
+
+navigation:
+  - label: About
+    url: /about/
+  - label: Tools
+    url: /tools/
+  - label: Design System
+    url: /design-system/
+  - label: Reservation
+    url: /reservation/
+
+reservation:
+  email: name@cosky.ai
+  endpoint: ""
+  subject: real estate Ai lab 内测预约
+
+social:
+  github: ""
+

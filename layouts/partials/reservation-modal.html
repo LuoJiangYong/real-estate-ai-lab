@@ -1,0 +1,5 @@
+{{ $site := .Site.Data.site }}
+<dialog class="reservation-dialog" data-reservation-dialog>
+  <button class="dialog-close" type="button" aria-label="Close reservation form" data-close-reservation>&times;</button>
+  {{ partial "reservation-form.html" . }}
+</dialog>

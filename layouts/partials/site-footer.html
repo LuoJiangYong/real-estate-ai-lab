@@ -1,0 +1,9 @@
+{{ $site := .Site.Data.site }}
+<footer class="site-footer">
+  <div>
+    <strong>{{ $site.brand.name }}</strong>
+    <span>{{ $site.brand.tagline }}</span>
+  </div>
+  <a href="mailto:{{ $site.reservation.email }}">{{ $site.reservation.email }}</a>
+</footer>
+

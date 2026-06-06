@@ -1,0 +1,51 @@
+{{ define "main" }}
+{{ $design := .Site.Data.design }}
+<section class="page-title section-pad">
+  <p class="eyebrow">COSKY.AI Brand Design System</p>
+  <h1>视觉规范与组件资产库</h1>
+  <p>用于维护网站、未来 AI 工具界面和传播物料的一致体验。</p>
+</section>
+
+<section class="design-section section-pad">
+  <h2>Color Palette</h2>
+  <div class="color-grid">
+    {{ range $design.colors }}
+      <article>
+        <span style="--swatch: {{ .hex }}"></span>
+        <strong>{{ .name }}</strong>
+        <code>{{ .hex }}</code>
+        <small>{{ .token }}</small>
+      </article>
+    {{ end }}
+  </div>
+</section>
+
+<section class="design-section section-pad">
+  <h2>Typography</h2>
+  <div class="type-grid">
+    <div class="type-sample">Aa</div>
+    <div>
+      <p><strong>Primary Font</strong><br>{{ $design.typography.primary }}</p>
+      <p><strong>Secondary Font</strong><br>Inter</p>
+    </div>
+  </div>
+</section>
+
+<section class="design-section section-pad">
+  <h2>Components</h2>
+  <div class="component-row">
+    <button class="button button-dark" type="button">内测预约</button>
+    <button class="button button-blue" type="button">开启内测体验</button>
+  </div>
+  <form class="reservation-form component-form">
+    <h3>提交预约</h3>
+    <p>上线发送内测通知</p>
+    <label>
+      <span>Email</span>
+      <input type="email" placeholder="your@email.com">
+    </label>
+    <button class="button button-dark" type="button">提交预约</button>
+  </form>
+</section>
+{{ end }}
+

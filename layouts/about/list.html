@@ -1,0 +1,38 @@
+{{ define "main" }}
+<section class="page-hero section-pad">
+  <div>
+    <p class="eyebrow">01 / Our Mission</p>
+    <h1>AI for<br>Better Living</h1>
+    <button class="button button-blue" type="button" data-open-reservation>预约内测体验</button>
+  </div>
+  <div>
+    <p class="lead">COSKY.AI 以「AI for Better Living」为理念，正在打造首个地产全场景 AI LAB OS，支持 AI 客研、产策、故事线、营销等场景。</p>
+    <span class="ribbon page-ribbon" aria-hidden="true"></span>
+  </div>
+</section>
+
+<section class="split-band section-pad">
+  <div>
+    <p class="eyebrow">03 / Our Philosophy</p>
+    <h2>AI For Better Living</h2>
+    <p>我们相信，更好的智能，不只是更快地生成答案，而是帮助人更清晰地理解生活、空间与未来。</p>
+    <p>COSKY.AI 以东方哲思中的整体观与秩序感为基础，构建面向未来的智能系统。</p>
+  </div>
+  <span class="ribbon page-ribbon" aria-hidden="true"></span>
+</section>
+
+<section class="section-pad">
+  <p class="eyebrow">04 / What We Build</p>
+  <h2>首个地产全场景 AI LAB OS</h2>
+  <div class="tool-grid">
+    {{ range .Site.Data.tools.tools }}
+      <article class="tool-item">
+        <span>{{ .number }}</span>
+        <h3>{{ .title }}</h3>
+        <p>{{ .description }}</p>
+      </article>
+    {{ end }}
+  </div>
+</section>
+{{ end }}
+

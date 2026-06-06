@@ -1,0 +1,21 @@
+{{ define "main" }}
+<section class="page-title section-pad">
+  <p class="eyebrow">AI Tools</p>
+  <h1>预留后续产品接入的工具中心</h1>
+  <p>每个工具用独立数据项维护。上线时可以从预告卡片切换到真实产品入口、文档页或外部应用。</p>
+</section>
+<section class="tool-catalog section-pad">
+  {{ range .Site.Data.tools.tools }}
+    <article class="catalog-item">
+      <span>{{ .number }}</span>
+      <div>
+        <p class="status">{{ .status }}</p>
+        <h2>{{ .title }}</h2>
+        <p>{{ .subtitle }}</p>
+      </div>
+      <p>{{ .description }}</p>
+    </article>
+  {{ end }}
+</section>
+{{ end }}
+

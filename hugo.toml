@@ -1,0 +1,15 @@
+baseURL = "/"
+languageCode = "zh-CN"
+title = "real estate Ai lab"
+
+[params]
+  brand = "COSKY.AI"
+  project = "real estate Ai lab"
+  tagline = "AI for Better Living"
+  description = "COSKY.AI is building a real estate AI LAB OS for research, product strategy, storyline, and marketing workflows."
+
+[markup.goldmark.renderer]
+  unsafe = true
+
+[build]
+  writeStats = true
