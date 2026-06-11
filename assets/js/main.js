@@ -45,12 +45,9 @@ document.querySelectorAll("[data-reservation-form]").forEach((form) => {
       name: formData.get("name") || "",
       email: formData.get("email"),
       message: formData.get("message") || "",
-      website: formData.get("website") || "",
       source: window.location.href,
       createdAt: new Date().toISOString()
     };
-
-    if (payload.website) return;
 
     if (status) status.value = "正在提交...";
 

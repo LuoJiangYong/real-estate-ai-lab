@@ -22,6 +22,8 @@ integrations/google-apps-script/contact-form.gs
 
 into the Apps Script editor.
 
+If the script is not bound to the target spreadsheet, set `CONFIG.spreadsheetId` to the spreadsheet ID from the Google Sheets URL.
+
 ## 3. Deploy as a Web App
 
 1. Click `Deploy > New deployment`.
@@ -31,6 +33,8 @@ into the Apps Script editor.
 5. Who has access: `Anyone`.
 6. Deploy and authorize the script.
 7. Copy the Web App URL ending in `/exec`.
+
+When `integrations/google-apps-script/contact-form.gs` changes, copy the updated script into Apps Script and create a new deployment version, or edit the existing deployment to use the latest code. A GitHub Pages deploy does not update Apps Script automatically.
 
 ## 4. Connect the Website
 
@@ -46,6 +50,10 @@ in `data/site.yaml`, then commit and push.
 ## Current Behavior
 
 - When `reservation.endpoint` is set, the website submits online to Google Apps Script.
+- Email and Message are required before submission.
+- The frontend does not silently discard submissions through a hidden anti-bot field.
+- Google Apps Script rejects empty or invalid payloads instead of writing blank rows.
+- Google Apps Script uses a script lock while assigning the serial number, so simultaneous submissions do not reuse the same number.
 - Google Apps Script writes to the linked Google Sheet with this column order:
   - Column 1: 序号
   - Column 2: 日期时间

@@ -1,30 +1,40 @@
 const CONFIG = {
   notificationEmail: 'richard.luo.bp@gmail.com',
+  spreadsheetId: '',
   sheetName: 'COSKY.AI Project Contacts',
   emailSubject: 'real estate Ai lab 项目联系'
 };
 
 function doPost(e) {
   const payload = parsePayload_(e);
+  const validationError = validatePayload_(payload);
 
-  if (payload.website) {
-    return json_({ ok: true, ignored: true });
+  if (validationError) {
+    return json_({ ok: false, error: validationError });
   }
 
-  const sheet = getSheet_();
   const submittedAt = new Date();
-  const serialNumber = getNextSerialNumber_(sheet);
   const message = buildMessage_(payload);
+  const lock = LockService.getScriptLock();
 
-  sheet.appendRow([
-    serialNumber,
-    submittedAt,
-    payload.name || '',
-    payload.email || '',
-    payload.message || '',
-    '',
-    ''
-  ]);
+  lock.waitLock(10000);
+  let serialNumber;
+  try {
+    const sheet = getSheet_();
+    serialNumber = getNextSerialNumber_(sheet);
+
+    sheet.appendRow([
+      serialNumber,
+      submittedAt,
+      payload.name || '',
+      payload.email || '',
+      payload.message || '',
+      '',
+      ''
+    ]);
+  } finally {
+    lock.releaseLock();
+  }
 
   MailApp.sendEmail({
     to: CONFIG.notificationEmail,
@@ -58,8 +68,17 @@ function parsePayload_(e) {
   }
 }
 
+function validatePayload_(payload) {
+  if (!payload || typeof payload !== 'object') return 'invalid_payload';
+  if (!payload.email || !String(payload.email).includes('@')) return 'email_required';
+  if (!payload.message || !String(payload.message).trim()) return 'message_required';
+  return '';
+}
+
 function getSheet_() {
-  const spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
+  const spreadsheet = CONFIG.spreadsheetId
+    ? SpreadsheetApp.openById(CONFIG.spreadsheetId)
+    : SpreadsheetApp.getActiveSpreadsheet();
   return spreadsheet.getSheetByName(CONFIG.sheetName) || spreadsheet.getSheets()[0];
 }
 

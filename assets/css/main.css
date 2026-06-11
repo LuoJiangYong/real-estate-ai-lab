@@ -568,14 +568,6 @@ h3 {
   gap: 8px;
 }
 
-.form-honeypot {
-  position: absolute;
-  left: -10000px;
-  width: 1px;
-  height: 1px;
-  overflow: hidden;
-}
-
 .reservation-form label span {
   font-size: 12px;
   font-weight: 700;

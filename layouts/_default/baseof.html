@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="{{ .Description | default .Site.Params.description }}">
-    <title>{{ if .IsHome }}{{ .Site.Params.brand }} · {{ .Site.Params.project }}{{ else }}{{ .Title }} · {{ .Site.Params.brand }}{{ end }}</title>
+    <title>{{ if .IsHome }}{{ .Site.Params.brand }}{{ else }}{{ .Title }} · {{ .Site.Params.brand }}{{ end }}</title>
     {{ $css := resources.Get "css/main.css" | minify | fingerprint }}
     <link rel="stylesheet" href="{{ $css.RelPermalink }}" integrity="{{ $css.Data.Integrity }}">
   </head>
