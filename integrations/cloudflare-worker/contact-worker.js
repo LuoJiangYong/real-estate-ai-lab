@@ -6,7 +6,7 @@ const DEFAULT_ALLOWED_ORIGINS = [
 ];
 
 export default {
-  async fetch(request, env) {
+  async fetch(request, env, ctx) {
     if (request.method === 'OPTIONS') {
       return withCors(request, new Response(null, { status: 204 }), env);
     }
@@ -32,6 +32,26 @@ export default {
       return withCors(request, json({ ok: false, error: validationError }, 400), env);
     }
 
+    const normalizedPayload = {
+      name: String(payload.name || '').trim(),
+      email: String(payload.email || '').trim(),
+      message: String(payload.message || '').trim(),
+      source: String(payload.source || ''),
+      createdAt: String(payload.createdAt || new Date().toISOString())
+    };
+
+    const forwarding = forwardToUpstream(upstreamUrl, normalizedPayload);
+    if (ctx && typeof ctx.waitUntil === 'function') {
+      ctx.waitUntil(forwarding);
+    } else {
+      await forwarding;
+    }
+
+    return withCors(request, json({ ok: true, queued: true }), env);
+  }
+};
+
+async function forwardToUpstream(upstreamUrl, payload) {
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort('upstream_timeout'), 9000);
 
@@ -41,13 +61,7 @@ export default {
         headers: {
           'Content-Type': 'text/plain;charset=utf-8'
         },
-        body: JSON.stringify({
-          name: String(payload.name || '').trim(),
-          email: String(payload.email || '').trim(),
-          message: String(payload.message || '').trim(),
-          source: String(payload.source || ''),
-          createdAt: String(payload.createdAt || new Date().toISOString())
-        }),
+        body: JSON.stringify(payload),
         signal: controller.signal
       });
 
@@ -60,28 +74,17 @@ export default {
       }
 
       if (!upstreamResponse.ok || upstreamBody.ok === false) {
-        return withCors(request, json({
-          ok: false,
-          error: 'upstream_failed',
-          upstreamStatus: upstreamResponse.status,
-          upstream: upstreamBody
-        }, 502), env);
+        throw new Error(`upstream_failed:${upstreamResponse.status}:${JSON.stringify(upstreamBody)}`);
       }
 
-      return withCors(request, json({
-        ok: true,
-        serialNumber: upstreamBody.serialNumber || null
-      }), env);
+      return upstreamBody;
     } catch (error) {
-      return withCors(request, json({
-        ok: false,
-        error: error && error.name === 'AbortError' ? 'upstream_timeout' : 'upstream_error'
-      }, 504), env);
+      console.error('contact_form_forward_failed', error && error.message ? error.message : error);
+      throw error;
     } finally {
       clearTimeout(timeout);
     }
-  }
-};
+}
 
 function validatePayload(payload) {
   if (!payload || typeof payload !== 'object') return 'invalid_payload';

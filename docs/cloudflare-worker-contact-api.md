@@ -55,7 +55,7 @@ reservation:
 Success:
 
 ```json
-{"ok":true,"serialNumber":12}
+{"ok":true,"queued":true}
 ```
 
 Validation failure:
@@ -73,5 +73,5 @@ Upstream failure:
 ## Notes
 
 - The Worker validates `email` and `message` before forwarding.
-- The Worker returns real JSON to the browser, so the frontend can show a true success or failure state.
+- The Worker returns JSON quickly after accepting a valid submission, so the frontend does not wait on Google Apps Script email delivery.
 - Google Apps Script still writes the sheet row and sends the notification email.
