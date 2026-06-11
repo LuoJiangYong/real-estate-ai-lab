@@ -37,10 +37,12 @@ document.querySelectorAll("[data-reservation-form]").forEach((form) => {
   form.addEventListener("submit", async (event) => {
     event.preventDefault();
     const status = form.querySelector("[data-form-status]");
+    const submitButton = form.querySelector('button[type="submit"]');
     const formData = new FormData(form);
     const endpoint = form.dataset.endpoint;
     const email = form.dataset.email;
     const subject = form.dataset.subject || "real estate Ai lab 项目联系";
+    const defaultButtonText = submitButton ? submitButton.textContent : "";
     const payload = {
       name: formData.get("name") || "",
       email: formData.get("email"),
@@ -50,19 +52,41 @@ document.querySelectorAll("[data-reservation-form]").forEach((form) => {
     };
 
     if (status) status.value = "正在提交...";
+    if (submitButton) {
+      submitButton.disabled = true;
+      submitButton.textContent = "提交中...";
+    }
 
     if (endpoint) {
+      let timeout;
+
       try {
-        await fetch(endpoint, {
-          method: "POST",
-          mode: "no-cors",
-          body: JSON.stringify(payload)
-        });
+        await Promise.race([
+          fetch(endpoint, {
+            method: "POST",
+            mode: "no-cors",
+            body: JSON.stringify(payload)
+          }),
+          new Promise((_, reject) => {
+            timeout = window.setTimeout(() => reject(new Error("timeout")), 10000);
+          })
+        ]);
+        window.clearTimeout(timeout);
         if (status) status.value = "已提交，我们会通过邮箱联系你。";
+        if (submitButton) {
+          submitButton.textContent = "已提交";
+          submitButton.disabled = true;
+        }
         form.reset();
         return;
       } catch (error) {
-        if (status) status.value = "在线提交暂不可用，正在打开邮件发送。";
+        window.clearTimeout(timeout);
+        if (status) status.value = "提交未完成，请重试或直接邮件联系。";
+        if (submitButton) {
+          submitButton.disabled = false;
+          submitButton.textContent = defaultButtonText;
+        }
+        return;
       }
     }
 
@@ -75,6 +99,10 @@ document.querySelectorAll("[data-reservation-form]").forEach((form) => {
     ].join("\n");
     window.location.href = `mailto:${email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
     if (status) status.value = "已打开邮件，请发送后完成联系。";
+    if (submitButton) {
+      submitButton.disabled = false;
+      submitButton.textContent = defaultButtonText;
+    }
   });
 });
 
