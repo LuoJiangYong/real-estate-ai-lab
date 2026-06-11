@@ -1,0 +1,17 @@
+name = "cosky-contact-api"
+main = "contact-worker.js"
+compatibility_date = "2026-06-11"
+
+# Option A: deploy to workers.dev first
+# workers_dev = true
+
+# Option B: after coskyai.com is on Cloudflare DNS, bind a production route
+# routes = [
+#   { pattern = "api.coskyai.com/contact", custom_domain = true }
+# ]
+
+[vars]
+ALLOWED_ORIGINS = "http://coskyai.com,https://coskyai.com,http://www.coskyai.com,https://www.coskyai.com"
+
+# Store the Apps Script URL as a secret, not plain text:
+# wrangler secret put CONTACT_FORM_UPSTREAM_URL

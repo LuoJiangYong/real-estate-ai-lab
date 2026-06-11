@@ -5,6 +5,57 @@ const dialog = document.querySelector("[data-reservation-dialog]");
 const openReservationButtons = document.querySelectorAll("[data-open-reservation]");
 const closeReservationButton = document.querySelector("[data-close-reservation]");
 
+function isGoogleAppsScriptEndpoint(endpoint) {
+  return endpoint && endpoint.includes("script.google.com");
+}
+
+function submitToGoogleAppsScript(endpoint, payload) {
+  const body = JSON.stringify(payload);
+
+  if (navigator.sendBeacon) {
+    const queued = navigator.sendBeacon(
+      endpoint,
+      new Blob([body], { type: "text/plain;charset=UTF-8" })
+    );
+    if (queued) return;
+  }
+
+  fetch(endpoint, {
+    method: "POST",
+    mode: "no-cors",
+    keepalive: true,
+    body
+  }).catch(() => {});
+}
+
+async function submitToWorker(endpoint, payload) {
+  let timeout;
+
+  try {
+    const response = await Promise.race([
+      fetch(endpoint, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(payload)
+      }),
+      new Promise((_, reject) => {
+        timeout = window.setTimeout(() => reject(new Error("timeout")), 10000);
+      })
+    ]);
+    const result = await response.json();
+
+    if (!response.ok || !result.ok) {
+      throw new Error(result.error || "request_failed");
+    }
+
+    return result;
+  } finally {
+    window.clearTimeout(timeout);
+  }
+}
+
 function updateHeader() {
   if (!header) return;
   header.classList.toggle("is-scrolled", window.scrollY > 16);
@@ -58,38 +109,25 @@ document.querySelectorAll("[data-reservation-form]").forEach((form) => {
 
     if (endpoint) {
       try {
-        const body = JSON.stringify(payload);
-
-        if (navigator.sendBeacon) {
-          const queued = navigator.sendBeacon(
-            endpoint,
-            new Blob([body], { type: "text/plain;charset=UTF-8" })
-          );
-          if (!queued) {
-            fetch(endpoint, {
-              method: "POST",
-              mode: "no-cors",
-              keepalive: true,
-              body
-            }).catch(() => {});
-          }
+        if (isGoogleAppsScriptEndpoint(endpoint)) {
+          submitToGoogleAppsScript(endpoint, payload);
+          window.setTimeout(() => {
+            if (status) status.value = "已提交，我们会通过邮箱联系你。";
+            if (submitButton) {
+              submitButton.textContent = "已提交";
+              submitButton.disabled = true;
+            }
+            form.reset();
+          }, 800);
         } else {
-          fetch(endpoint, {
-            method: "POST",
-            mode: "no-cors",
-            keepalive: true,
-            body
-          }).catch(() => {});
-        }
-
-        window.setTimeout(() => {
+          await submitToWorker(endpoint, payload);
           if (status) status.value = "已提交，我们会通过邮箱联系你。";
           if (submitButton) {
             submitButton.textContent = "已提交";
             submitButton.disabled = true;
           }
           form.reset();
-        }, 800);
+        }
       } catch (error) {
         if (status) status.value = `提交暂不可用，请发送邮件至 ${email}`;
         if (submitButton) {

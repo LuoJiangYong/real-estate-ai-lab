@@ -17,12 +17,13 @@ The site is static, so the reservation form supports two modes:
 
 Recommended endpoint:
 
-- Google Apps Script Web App. See `docs/google-contact-form.md`.
+- Cloudflare Worker Contact API for production mobile and WeChat traffic. See `docs/cloudflare-worker-contact-api.md`.
+- Google Apps Script Web App remains the upstream sheet and email handler. See `docs/google-contact-form.md`.
 
 Other possible endpoints:
 
 - Formspree or Getform for the earliest public launch.
-- Cloudflare Worker or Supabase Edge Function when COSKY.AI needs a controlled data flow.
+- Supabase Edge Function when COSKY.AI needs a controlled data flow.
 - A Go service only when the AI tool platform needs a real backend.
 
 ## Product Expansion
