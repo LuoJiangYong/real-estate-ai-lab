@@ -41,7 +41,6 @@ document.querySelectorAll("[data-reservation-form]").forEach((form) => {
     const formData = new FormData(form);
     const endpoint = form.dataset.endpoint;
     const email = form.dataset.email;
-    const subject = form.dataset.subject || "real estate Ai lab 项目联系";
     const defaultButtonText = submitButton ? submitButton.textContent : "";
     const payload = {
       name: formData.get("name") || "",
@@ -58,51 +57,52 @@ document.querySelectorAll("[data-reservation-form]").forEach((form) => {
     }
 
     if (endpoint) {
-      let timeout;
-
       try {
-        await Promise.race([
+        const body = JSON.stringify(payload);
+
+        if (navigator.sendBeacon) {
+          const queued = navigator.sendBeacon(
+            endpoint,
+            new Blob([body], { type: "text/plain;charset=UTF-8" })
+          );
+          if (!queued) {
+            fetch(endpoint, {
+              method: "POST",
+              mode: "no-cors",
+              keepalive: true,
+              body
+            }).catch(() => {});
+          }
+        } else {
           fetch(endpoint, {
             method: "POST",
             mode: "no-cors",
-            body: JSON.stringify(payload)
-          }),
-          new Promise((_, reject) => {
-            timeout = window.setTimeout(() => reject(new Error("timeout")), 10000);
-          })
-        ]);
-        window.clearTimeout(timeout);
-        if (status) status.value = "已提交，我们会通过邮箱联系你。";
-        if (submitButton) {
-          submitButton.textContent = "已提交";
-          submitButton.disabled = true;
+            keepalive: true,
+            body
+          }).catch(() => {});
         }
-        form.reset();
-        return;
+
+        window.setTimeout(() => {
+          if (status) status.value = "已提交，我们会通过邮箱联系你。";
+          if (submitButton) {
+            submitButton.textContent = "已提交";
+            submitButton.disabled = true;
+          }
+          form.reset();
+        }, 800);
       } catch (error) {
-        window.clearTimeout(timeout);
-        if (status) status.value = "提交未完成，请重试或直接邮件联系。";
+        if (status) status.value = `提交暂不可用，请发送邮件至 ${email}`;
         if (submitButton) {
           submitButton.disabled = false;
           submitButton.textContent = defaultButtonText;
         }
-        return;
       }
+
+      return;
     }
 
-    const body = [
-      `Name: ${payload.name}`,
-      `Email: ${payload.email}`,
-      `Message: ${payload.message}`,
-      `Source: ${payload.source}`,
-      `Time: ${payload.createdAt}`
-    ].join("\n");
-    window.location.href = `mailto:${email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-    if (status) status.value = "已打开邮件，请发送后完成联系。";
-    if (submitButton) {
-      submitButton.disabled = false;
-      submitButton.textContent = defaultButtonText;
-    }
+    if (status) status.value = `提交暂不可用，请发送邮件至 ${email}`;
+    if (submitButton) submitButton.textContent = defaultButtonText;
   });
 });
 
