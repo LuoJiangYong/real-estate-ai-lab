@@ -12,7 +12,7 @@ navigation:
 
 reservation:
   email: richard.luo.bp@gmail.com
-  endpoint: ""
+  endpoint: "https://script.google.com/macros/s/AKfycbwZTflQpWarpPLIRcRfc1nsOxcEHNae1YQI4UPyLce1M-dDVBCZ5UoOkAztm-R5N2rn/exec"
   subject: real estate Ai lab 项目联系
 
 social:
