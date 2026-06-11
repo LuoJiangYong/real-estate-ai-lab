@@ -29,52 +29,31 @@ function submitToGoogleAppsScript(endpoint, payload) {
 }
 
 async function submitToWorker(endpoint, payload) {
-  return submitWithHiddenForm(endpoint, payload);
-}
+  let timeout;
 
-function submitWithHiddenForm(endpoint, payload) {
-  return new Promise((resolve, reject) => {
-    const frameName = `contact-submit-${Date.now()}`;
-    const iframe = document.createElement("iframe");
-    const relayForm = document.createElement("form");
-    const timeout = window.setTimeout(() => {
-      cleanup();
-      reject(new Error("submit_timeout"));
-    }, 10000);
+  try {
+    const response = await Promise.race([
+      fetch(endpoint, {
+        method: "POST",
+        headers: {
+          "Content-Type": "text/plain;charset=UTF-8"
+        },
+        body: JSON.stringify(payload)
+      }),
+      new Promise((_, reject) => {
+        timeout = window.setTimeout(() => reject(new Error("submit_timeout")), 10000);
+      })
+    ]);
+    const result = await response.json();
 
-    function cleanup() {
-      window.clearTimeout(timeout);
-      iframe.remove();
-      relayForm.remove();
+    if (!response.ok || !result.ok) {
+      throw new Error(result.error || "request_failed");
     }
 
-    iframe.id = frameName;
-    iframe.name = frameName;
-    iframe.setAttribute("name", frameName);
-    iframe.style.display = "none";
-    iframe.setAttribute("aria-hidden", "true");
-    iframe.addEventListener("load", () => {
-      cleanup();
-      resolve({ ok: true });
-    }, { once: true });
-
-    relayForm.style.display = "none";
-    relayForm.setAttribute("method", "POST");
-    relayForm.setAttribute("action", endpoint);
-    relayForm.setAttribute("target", frameName);
-
-    Object.entries(payload).forEach(([key, value]) => {
-      const input = document.createElement("input");
-      input.type = "hidden";
-      input.name = key;
-      input.value = value || "";
-      relayForm.appendChild(input);
-    });
-
-    document.body.appendChild(iframe);
-    document.body.appendChild(relayForm);
-    window.requestAnimationFrame(() => relayForm.submit());
-  });
+    return result;
+  } finally {
+    window.clearTimeout(timeout);
+  }
 }
 
 function updateHeader() {
