@@ -1,6 +1,6 @@
 {{ $site := .Site.Data.site }}
 <header class="site-header" data-header>
-  <a class="brand-mark" href="{{ "/" | relURL }}" aria-label="{{ $site.brand.name }} home">{{ $site.brand.name }}</a>
+  <a class="brand-mark" href="{{ "" | relURL }}" aria-label="{{ $site.brand.name }} home">{{ $site.brand.name }}</a>
   <nav class="site-nav" aria-label="Primary navigation">
     {{ range $site.navigation }}
       <a href="{{ .url | relURL }}">{{ .label }}</a>
@@ -11,4 +11,3 @@
     <span></span>
   </button>
 </header>
-

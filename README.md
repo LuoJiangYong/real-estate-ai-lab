@@ -34,5 +34,4 @@ The local site will be available at the URL printed by Hugo.
 
 Push to the `main` branch. GitHub Actions builds the Hugo site and publishes it to GitHub Pages.
 
-Before the first deploy, enable GitHub Pages in the repository settings and select GitHub Actions as the source.
-
+The current production domain is `coskyai.com`. DNS setup notes are in `docs/domain-setup.md`.

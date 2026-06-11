@@ -71,10 +71,33 @@
   </div>
 </section>
 
+<section class="brand-system-section section-pad" aria-labelledby="brand-system-title">
+  <div class="brand-system-copy">
+    <p class="eyebrow">Brand System</p>
+    <h2 id="brand-system-title">科技与人文共生的智能空间语言</h2>
+    <p>{{ .Site.Data.design.brandIntroduction }}</p>
+  </div>
+  <div class="brand-system-board">
+    <div class="concept-equation" aria-label="Logo concept">
+      {{ range $index, $item := .Site.Data.design.logoConcept }}
+        {{ if gt $index 0 }}<span class="equation-mark">+</span>{{ end }}
+        <figure>
+          <strong>{{ .symbol }}</strong>
+          <figcaption>{{ .label }}</figcaption>
+        </figure>
+      {{ end }}
+    </div>
+    <div class="icon-grid" aria-label="Iconography">
+      {{ range .Site.Data.design.icons }}
+        <span><i>{{ .symbol }}</i>{{ .label }}</span>
+      {{ end }}
+    </div>
+  </div>
+</section>
+
 <section class="final-cta section-pad">
   <h2>COSKY.AI</h2>
   <p>AI for Better Living</p>
   <button class="button button-blue" type="button" data-open-reservation>预约内测体验</button>
 </section>
 {{ end }}
-

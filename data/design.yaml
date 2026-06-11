@@ -29,3 +29,30 @@ patterns:
   - 秩序
   - 留白
 
+brandIntroduction: COSKY.AI 致力于以 AI 科技重塑居住体验，让每一个空间更懂人、更美好。我们相信，科技与人文可以共生，未来的家，因智慧而温暖。
+
+logoConcept:
+  - symbol: C
+    label: COSKY origin
+  - symbol: ○
+    label: 东方整体观
+  - symbol: ⌂
+    label: 智能空间
+
+icons:
+  - symbol: ⌂
+    label: 智能空间
+  - symbol: ↗
+    label: 场景推荐
+  - symbol: ▥
+    label: 数据洞察
+  - symbol: ◉
+    label: 家庭定制
+  - symbol: ☁
+    label: 环境监测
+  - symbol: □
+    label: 资产管理
+  - symbol: ◇
+    label: 安全守护
+  - symbol: ◎
+    label: 社区服务
