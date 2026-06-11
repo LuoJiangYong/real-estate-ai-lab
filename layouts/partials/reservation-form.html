@@ -4,12 +4,20 @@
   <h2>联系项目团队</h2>
   <p>AI for Better Living</p>
   <label>
+    <span>Name</span>
+    <input type="text" name="name" placeholder="你的姓名" autocomplete="name">
+  </label>
+  <label>
     <span>Email</span>
     <input type="email" name="email" placeholder="your@email.com" autocomplete="email" required>
   </label>
   <label>
     <span>Message</span>
     <textarea name="message" rows="3" placeholder="简单说明你的业务场景或合作方向"></textarea>
+  </label>
+  <label class="form-honeypot" aria-hidden="true">
+    <span>Website</span>
+    <input type="text" name="website" tabindex="-1" autocomplete="off">
   </label>
   <button class="button button-dark" type="submit">提交</button>
   <output class="form-status" data-form-status></output>

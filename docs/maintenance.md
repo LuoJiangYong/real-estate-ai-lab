@@ -15,7 +15,11 @@ The site is static, so the reservation form supports two modes:
 - `data/site.yaml > reservation.endpoint` is empty: the form opens an email draft.
 - `reservation.endpoint` is set: the form sends JSON to that endpoint.
 
-Recommended future endpoints:
+Recommended endpoint:
+
+- Google Apps Script Web App. See `docs/google-contact-form.md`.
+
+Other possible endpoints:
 
 - Formspree or Getform for the earliest public launch.
 - Cloudflare Worker or Supabase Edge Function when COSKY.AI needs a controlled data flow.
@@ -41,4 +45,3 @@ Use the Figma file as visual source of truth for:
 - Page spacing and hierarchy
 
 When the Figma MCP limit resets, refresh screenshots and update `docs/visual-guidelines.md` before broad visual changes.
-

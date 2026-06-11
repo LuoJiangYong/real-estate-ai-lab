@@ -29,6 +29,7 @@ The local site will be available at the URL printed by Hugo.
 - Page content: `content/`
 - Layouts and components: `layouts/`
 - Styles and interaction scripts: `assets/`
+- Google contact form setup: `docs/google-contact-form.md`
 
 ## Deployment
 
