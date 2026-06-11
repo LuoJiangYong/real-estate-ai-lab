@@ -29,31 +29,39 @@ function submitToGoogleAppsScript(endpoint, payload) {
 }
 
 async function submitToWorker(endpoint, payload) {
-  let timeout;
+  submitWithHiddenForm(endpoint, payload);
+  return { ok: true, queued: true };
+}
 
-  try {
-    const response = await Promise.race([
-      fetch(endpoint, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(payload)
-      }),
-      new Promise((_, reject) => {
-        timeout = window.setTimeout(() => reject(new Error("timeout")), 10000);
-      })
-    ]);
-    const result = await response.json();
+function submitWithHiddenForm(endpoint, payload) {
+  const frameName = `contact-submit-${Date.now()}`;
+  const iframe = document.createElement("iframe");
+  const relayForm = document.createElement("form");
 
-    if (!response.ok || !result.ok) {
-      throw new Error(result.error || "request_failed");
-    }
+  iframe.name = frameName;
+  iframe.hidden = true;
+  iframe.setAttribute("aria-hidden", "true");
+  relayForm.hidden = true;
+  relayForm.method = "POST";
+  relayForm.action = endpoint;
+  relayForm.target = frameName;
 
-    return result;
-  } finally {
-    window.clearTimeout(timeout);
-  }
+  Object.entries(payload).forEach(([key, value]) => {
+    const input = document.createElement("input");
+    input.type = "hidden";
+    input.name = key;
+    input.value = value || "";
+    relayForm.appendChild(input);
+  });
+
+  document.body.appendChild(iframe);
+  document.body.appendChild(relayForm);
+  relayForm.submit();
+
+  window.setTimeout(() => {
+    relayForm.remove();
+    iframe.remove();
+  }, 15000);
 }
 
 function updateHeader() {

@@ -22,9 +22,9 @@ export default {
 
     let payload;
     try {
-      payload = await request.json();
+      payload = await parsePayload(request);
     } catch (error) {
-      return withCors(request, json({ ok: false, error: 'invalid_json' }, 400), env);
+      return withCors(request, json({ ok: false, error: 'invalid_payload' }, 400), env);
     }
 
     const validationError = validatePayload(payload);
@@ -91,6 +91,32 @@ function validatePayload(payload) {
   if (!payload.email || !String(payload.email).includes('@')) return 'email_required';
   if (!payload.message || !String(payload.message).trim()) return 'message_required';
   return '';
+}
+
+async function parsePayload(request) {
+  const contentType = request.headers.get('Content-Type') || '';
+
+  if (contentType.includes('application/json')) {
+    return request.json();
+  }
+
+  if (
+    contentType.includes('application/x-www-form-urlencoded') ||
+    contentType.includes('multipart/form-data')
+  ) {
+    const formData = await request.formData();
+    return Object.fromEntries(formData.entries());
+  }
+
+  const text = await request.text();
+  if (!text) return {};
+
+  try {
+    return JSON.parse(text);
+  } catch (error) {
+    const params = new URLSearchParams(text);
+    return Object.fromEntries(params.entries());
+  }
 }
 
 function json(value, status = 200) {
