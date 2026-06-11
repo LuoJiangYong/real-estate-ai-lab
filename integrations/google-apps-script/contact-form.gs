@@ -11,18 +11,20 @@ function doPost(e) {
     return json_({ ok: true, ignored: true });
   }
 
+  const sheet = getSheet_();
   const submittedAt = new Date();
-  const row = [
+  const serialNumber = getNextSerialNumber_(sheet);
+  const message = buildMessage_(payload);
+
+  sheet.appendRow([
+    serialNumber,
     submittedAt,
     payload.name || '',
     payload.email || '',
     payload.message || '',
-    payload.source || '',
-    payload.createdAt || ''
-  ];
-
-  const sheet = getSheet_();
-  sheet.appendRow(row);
+    '',
+    ''
+  ]);
 
   MailApp.sendEmail({
     to: CONFIG.notificationEmail,
@@ -30,16 +32,17 @@ function doPost(e) {
     body: [
       'COSKY.AI 网站收到新的项目联系信息。',
       '',
-      `Name: ${payload.name || ''}`,
-      `Email: ${payload.email || ''}`,
-      `Message: ${payload.message || ''}`,
-      `Source: ${payload.source || ''}`,
-      `Submitted at: ${submittedAt.toISOString()}`
+      `序号: ${serialNumber}`,
+      `日期时间: ${submittedAt.toISOString()}`,
+      `姓名: ${payload.name || ''}`,
+      `邮箱: ${payload.email || ''}`,
+      `填写的信息: ${message}`,
+      `来源页面: ${payload.source || ''}`
     ].join('\n'),
     replyTo: payload.email || CONFIG.notificationEmail
   });
 
-  return json_({ ok: true });
+  return json_({ ok: true, serialNumber });
 }
 
 function doGet() {
@@ -57,15 +60,27 @@ function parsePayload_(e) {
 
 function getSheet_() {
   const spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
-  let sheet = spreadsheet.getSheetByName(CONFIG.sheetName);
+  return spreadsheet.getSheetByName(CONFIG.sheetName) || spreadsheet.getSheets()[0];
+}
 
-  if (!sheet) {
-    sheet = spreadsheet.insertSheet(CONFIG.sheetName);
-    sheet.appendRow(['Received At', 'Name', 'Email', 'Message', 'Source', 'Client Created At']);
-    sheet.setFrozenRows(1);
+function getNextSerialNumber_(sheet) {
+  const lastRow = sheet.getLastRow();
+  if (lastRow < 2) return 1;
+
+  const lastValue = sheet.getRange(lastRow, 1).getValue();
+  const lastNumber = Number(lastValue);
+  if (Number.isFinite(lastNumber) && lastNumber > 0) {
+    return lastNumber + 1;
   }
 
-  return sheet;
+  return lastRow;
+}
+
+function buildMessage_(payload) {
+  const parts = [];
+  if (payload.name) parts.push(`姓名：${payload.name}`);
+  if (payload.message) parts.push(`信息：${payload.message}`);
+  return parts.join('\n');
 }
 
 function json_(value) {
@@ -73,4 +88,3 @@ function json_(value) {
     .createTextOutput(JSON.stringify(value))
     .setMimeType(ContentService.MimeType.JSON);
 }
-

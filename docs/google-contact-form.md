@@ -46,11 +46,17 @@ in `data/site.yaml`, then commit and push.
 ## Current Behavior
 
 - When `reservation.endpoint` is set, the website submits online to Google Apps Script.
-- Google Apps Script writes to the linked Google Sheet.
+- Google Apps Script writes to the linked Google Sheet with this column order:
+  - Column 1: 序号
+  - Column 2: 日期时间
+  - Column 3: 姓名
+  - Column 4: 邮箱
+  - Column 5: 填写的信息
+  - Column 6: 人工跟进字段
+  - Column 7: 人工跟进字段
 - Google Apps Script sends a notification email to `richard.luo.bp@gmail.com`.
 - When `reservation.endpoint` is empty, the website falls back to opening a mail draft.
 
 ## Notes
 
 The browser uses a no-CORS request for the Apps Script submission. This avoids cross-origin preflight issues on a static GitHub Pages site, but the browser cannot read the server response. The page treats a dispatched request as submitted.
-
