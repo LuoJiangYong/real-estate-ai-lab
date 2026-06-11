@@ -48,18 +48,20 @@ function submitWithHiddenForm(endpoint, payload) {
       relayForm.remove();
     }
 
+    iframe.id = frameName;
     iframe.name = frameName;
-    iframe.hidden = true;
+    iframe.setAttribute("name", frameName);
+    iframe.style.display = "none";
     iframe.setAttribute("aria-hidden", "true");
     iframe.addEventListener("load", () => {
       cleanup();
       resolve({ ok: true });
     }, { once: true });
 
-    relayForm.hidden = true;
-    relayForm.method = "POST";
-    relayForm.action = endpoint;
-    relayForm.target = frameName;
+    relayForm.style.display = "none";
+    relayForm.setAttribute("method", "POST");
+    relayForm.setAttribute("action", endpoint);
+    relayForm.setAttribute("target", frameName);
 
     Object.entries(payload).forEach(([key, value]) => {
       const input = document.createElement("input");
@@ -71,7 +73,7 @@ function submitWithHiddenForm(endpoint, payload) {
 
     document.body.appendChild(iframe);
     document.body.appendChild(relayForm);
-    relayForm.submit();
+    window.requestAnimationFrame(() => relayForm.submit());
   });
 }
 
