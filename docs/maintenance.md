@@ -20,6 +20,10 @@ Recommended endpoint:
 - Cloudflare Worker Contact API for production mobile and WeChat traffic. See `docs/cloudflare-worker-contact-api.md`.
 - Google Apps Script Web App remains the upstream sheet and email handler. See `docs/google-contact-form.md`.
 
+Known issue:
+
+- Direct `workers.dev` endpoints can work on desktop while failing on mobile networks or in WeChat. If mobile submissions fail while desktop submissions work, bind the Worker to a custom domain such as `api.coskyai.com` and update `data/site.yaml > reservation.endpoint` to that domain.
+
 Other possible endpoints:
 
 - Formspree or Getform for the earliest public launch.
