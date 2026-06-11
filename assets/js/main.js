@@ -29,39 +29,50 @@ function submitToGoogleAppsScript(endpoint, payload) {
 }
 
 async function submitToWorker(endpoint, payload) {
-  submitWithHiddenForm(endpoint, payload);
-  return { ok: true, queued: true };
+  return submitWithHiddenForm(endpoint, payload);
 }
 
 function submitWithHiddenForm(endpoint, payload) {
-  const frameName = `contact-submit-${Date.now()}`;
-  const iframe = document.createElement("iframe");
-  const relayForm = document.createElement("form");
+  return new Promise((resolve, reject) => {
+    const frameName = `contact-submit-${Date.now()}`;
+    const iframe = document.createElement("iframe");
+    const relayForm = document.createElement("form");
+    const timeout = window.setTimeout(() => {
+      cleanup();
+      reject(new Error("submit_timeout"));
+    }, 10000);
 
-  iframe.name = frameName;
-  iframe.hidden = true;
-  iframe.setAttribute("aria-hidden", "true");
-  relayForm.hidden = true;
-  relayForm.method = "POST";
-  relayForm.action = endpoint;
-  relayForm.target = frameName;
+    function cleanup() {
+      window.clearTimeout(timeout);
+      iframe.remove();
+      relayForm.remove();
+    }
 
-  Object.entries(payload).forEach(([key, value]) => {
-    const input = document.createElement("input");
-    input.type = "hidden";
-    input.name = key;
-    input.value = value || "";
-    relayForm.appendChild(input);
+    iframe.name = frameName;
+    iframe.hidden = true;
+    iframe.setAttribute("aria-hidden", "true");
+    iframe.addEventListener("load", () => {
+      cleanup();
+      resolve({ ok: true });
+    }, { once: true });
+
+    relayForm.hidden = true;
+    relayForm.method = "POST";
+    relayForm.action = endpoint;
+    relayForm.target = frameName;
+
+    Object.entries(payload).forEach(([key, value]) => {
+      const input = document.createElement("input");
+      input.type = "hidden";
+      input.name = key;
+      input.value = value || "";
+      relayForm.appendChild(input);
+    });
+
+    document.body.appendChild(iframe);
+    document.body.appendChild(relayForm);
+    relayForm.submit();
   });
-
-  document.body.appendChild(iframe);
-  document.body.appendChild(relayForm);
-  relayForm.submit();
-
-  window.setTimeout(() => {
-    relayForm.remove();
-    iframe.remove();
-  }, 15000);
 }
 
 function updateHeader() {
