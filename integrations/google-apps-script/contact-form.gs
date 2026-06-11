@@ -67,13 +67,14 @@ function getNextSerialNumber_(sheet) {
   const lastRow = sheet.getLastRow();
   if (lastRow < 2) return 1;
 
-  const lastValue = sheet.getRange(lastRow, 1).getValue();
-  const lastNumber = Number(lastValue);
-  if (Number.isFinite(lastNumber) && lastNumber > 0) {
-    return lastNumber + 1;
-  }
+  const values = sheet.getRange(2, 1, lastRow - 1, 1).getValues().flat();
+  const maxSerial = values.reduce((max, value) => {
+    const number = Number(value);
+    if (!Number.isInteger(number) || number < 1 || number > 1000000) return max;
+    return Math.max(max, number);
+  }, 0);
 
-  return lastRow;
+  return maxSerial + 1;
 }
 
 function buildMessage_(payload) {
