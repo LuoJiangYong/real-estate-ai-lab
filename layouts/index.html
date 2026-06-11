@@ -7,7 +7,7 @@
     <h1>{{ $site.brand.name }}</h1>
     <span class="title-rule"></span>
     <p class="hero-tagline">{{ $site.brand.tagline }}</p>
-    <button class="button button-dark" type="button" data-open-reservation>内测预约</button>
+    <button class="button button-dark" type="button" data-open-reservation>项目联系</button>
   </div>
   <div class="ribbon-field" aria-hidden="true">
     <span class="ribbon ribbon-one"></span>
@@ -28,7 +28,7 @@
       <span class="title-rule"></span>
       <p>COSKY.AI 以「AI For Better Living」为核心理念，正在打造首个地产全场景 AI LAB OS，覆盖 AI 客研、产策、故事线、营销等关键环节。</p>
       <p>通过多 Agent 协作架构、可视化画布系统与客群平行世界，让复杂决策过程变得更清晰、更高效、更具洞察力。</p>
-      <button class="button button-dark" type="button" data-open-reservation>内测预约</button>
+      <button class="button button-dark" type="button" data-open-reservation>项目联系</button>
     </div>
     <div class="motion-panel" aria-hidden="true">
       <span class="ribbon ribbon-mid"></span>
@@ -71,33 +71,9 @@
   </div>
 </section>
 
-<section class="brand-system-section section-pad" aria-labelledby="brand-system-title">
-  <div class="brand-system-copy">
-    <p class="eyebrow">Brand System</p>
-    <h2 id="brand-system-title">科技与人文共生的智能空间语言</h2>
-    <p>{{ .Site.Data.design.brandIntroduction }}</p>
-  </div>
-  <div class="brand-system-board">
-    <div class="concept-equation" aria-label="Logo concept">
-      {{ range $index, $item := .Site.Data.design.logoConcept }}
-        {{ if gt $index 0 }}<span class="equation-mark">+</span>{{ end }}
-        <figure>
-          <strong>{{ .symbol }}</strong>
-          <figcaption>{{ .label }}</figcaption>
-        </figure>
-      {{ end }}
-    </div>
-    <div class="icon-grid" aria-label="Iconography">
-      {{ range .Site.Data.design.icons }}
-        <span><i>{{ .symbol }}</i>{{ .label }}</span>
-      {{ end }}
-    </div>
-  </div>
-</section>
-
 <section class="final-cta section-pad">
   <h2>COSKY.AI</h2>
   <p>AI for Better Living</p>
-  <button class="button button-blue" type="button" data-open-reservation>预约内测体验</button>
+  <button class="button button-blue" type="button" data-open-reservation>项目联系</button>
 </section>
 {{ end }}

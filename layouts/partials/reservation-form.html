@@ -1,7 +1,7 @@
 {{ $site := .Site.Data.site }}
 <form class="reservation-form" data-reservation-form data-endpoint="{{ $site.reservation.endpoint }}" data-email="{{ $site.reservation.email }}" data-subject="{{ $site.reservation.subject }}">
-  <p class="eyebrow">Reservation</p>
-  <h2>预约内测体验</h2>
+  <p class="eyebrow">Contact</p>
+  <h2>联系项目团队</h2>
   <p>AI for Better Living</p>
   <label>
     <span>Email</span>
@@ -9,9 +9,8 @@
   </label>
   <label>
     <span>Message</span>
-    <textarea name="message" rows="3" placeholder="简单说明你的业务场景或关注方向"></textarea>
+    <textarea name="message" rows="3" placeholder="简单说明你的业务场景或合作方向"></textarea>
   </label>
-  <button class="button button-dark" type="submit">提交预约</button>
+  <button class="button button-dark" type="submit">提交</button>
   <output class="form-status" data-form-status></output>
 </form>
-
