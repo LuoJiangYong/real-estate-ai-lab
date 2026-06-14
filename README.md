@@ -1,6 +1,8 @@
-# real estate Ai lab
+# COSKY.AI real estate Ai lab
 
-COSKY.AI is building `real estate Ai lab`, a real estate AI product website and future tool gateway.
+COSKY.AI 是一个面向行业构建垂直 AI 解决方案的人工智能团队，目前正在开发首个房地产行业的 AI Lab 项目，围绕 “AI for Better Living” 构建地产全场景智能工具体系，覆盖客户研究、产品策略、故事线生成与营销内容等关键环节，帮助团队更高效地理解客户、组织策略并产出高质量项目内容。
+
+Website: [https://coskyai.com/](https://coskyai.com/)
 
 The first release is a Hugo-powered project introduction site with:
 
